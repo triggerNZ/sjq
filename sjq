@@ -1,0 +1,5 @@
+#!/bin/bash
+
+JAR=$PWD/target/scala-2.11/sjq-assembly-0.1-SNAPSHOT.jar
+
+java -jar $JAR $@

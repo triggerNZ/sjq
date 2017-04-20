@@ -21,7 +21,6 @@ object Interpreter {
 
 
   def termToFunction(term: Term): JqFunction = {
-    println(s"Matching $term")
     term match {
       case IdentityTerm => identityF
       case FieldTerm(fields) => composeList(fields.map {
@@ -58,7 +57,6 @@ object Interpreter {
   }
 
   def sliceTerm(trm: Term, startExp: Option[Exp], endExp: Option[Exp]) = JqFunction { input =>
-    println(s"Slicing $input on $startExp : $endExp")
     val len = seqLength(input)
 
     val termFunction = termToFunction(trm)
@@ -77,16 +75,12 @@ object Interpreter {
   }
 
   def indexTerm(term: Term, index: Exp) = JqFunction { input =>
-    println(s"Indexing $input on $index")
     //This is weird: we use input twice. Does it make sense?
     val termFunction = termToFunction(term)
     val indexFunction = expToFunction(index)
 
     val trm = termFunction(input)
     val idx = indexFunction(trm)
-
-    println(trm)
-    println(idx)
 
     val value = strictField(idx)(input)
     value

@@ -95,18 +95,18 @@ object Parser {
   }
 
 
-  val stringLiteralTerm: P[Term] = Tok.stringLiteral.map(lit => StringLiteralTerm(lit.value)).log("STRING LITERAL TERM")
-  val numberLiteralTerm: P[Term] = Tok.numLiteral.map(nl => NumberLiteralTerm(nl)).log("NUMBER LITERAL TERM")
+  val stringLiteralTerm: P[Term] = Tok.stringLiteral.map(lit => StringLiteralTerm(lit.value))
+  val numberLiteralTerm: P[Term] = Tok.numLiteral.map(nl => NumberLiteralTerm(nl))
 
   val indexTerm: P[Term] = stringLiteralTerm | numberLiteralTerm
 
   def term: P[Term] =
-    stringLiteralTerm.log("LIT") |
-      (Tok.field ~ "?".!.?).rep(1).map(fs  => FieldTerm(fs.toList.map {case (f, o) => (f, o.isDefined)})).log("FIELD") |
+    stringLiteralTerm |
+      (Tok.field ~ "?".!.?).rep(1).map(fs  => FieldTerm(fs.toList.map {case (f, o) => (f, o.isDefined)})) |
     Tok.rec          .map(_   => RecTerm) |
-//    P(".") ~ sliceExpr.? .map { ie => wrapSliceTerm(IdentityTerm, ie)}.log("SLICE TERM") |
-    P(".") ~ indexExpr.? .map { ie => wrapIndexTerm(IdentityTerm, ie)}.log("INDEX TERM") |
-    numberLiteralTerm.log("NUMBER LITERAL")
+//    P(".") ~ sliceExpr.? .map { ie => wrapSliceTerm(IdentityTerm, ie)} |
+    P(".") ~ indexExpr.? .map { ie => wrapIndexTerm(IdentityTerm, ie)} |
+    numberLiteralTerm
 
   def wrapIndexTerm(t: Term, idx: Option[IndexExpr]): Term = idx match {
     case None => t
@@ -123,7 +123,7 @@ object Parser {
     IndexExpr(TermExp(term))
   }
 
-  def sliceExpr: P[SliceExpr] = ("[" ~ numberLiteralTerm.? ~ ":" ~ numberLiteralTerm.? ~ "]").log("SLICE").map { case (t1o, t2o) =>
+  def sliceExpr: P[SliceExpr] = ("[" ~ numberLiteralTerm.? ~ ":" ~ numberLiteralTerm.? ~ "]").map { case (t1o, t2o) =>
     SliceExpr(t1o.map(TermExp), t2o.map(TermExp))
   }
 

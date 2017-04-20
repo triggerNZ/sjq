@@ -1,9 +1,11 @@
 package au.com.simplemachines.sjq
 
+import au.com.simplemachines.sjq.Syntax.IndexTerm
 import org.specs2.Specification
 import fastparse.all._
 
-import scalaz._, syntax.either._
+import scalaz._
+import syntax.either._
 
 object ParserSpec extends Specification {
   import Parser._
@@ -17,7 +19,7 @@ object ParserSpec extends Specification {
          identifiers      ${"foo".p(Tok.ident) === Identifier("foo")}
          strings          ${"\"hello world\"".p(Tok.stringLiteral) === StringLiteral("hello world")}
        Slices and indices
-         String index     ${".[\"Hello\"]".p(Parser.term) === true}
+         String index     ${".[\"Hello\"]".p(Parser.term).isInstanceOf[IndexTerm] === true}
     """
 
 
