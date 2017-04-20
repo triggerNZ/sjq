@@ -9,7 +9,7 @@ libraryDependencies ++= Seq(
   "org.scalaz" %% "scalaz-core" % "7.2.7",
 
   "io.argonaut" %% "argonaut" % argonaut,
-
+  "com.typesafe.play" %% "play-json" % "2.6.0-M1",
   "org.specs2" %% "specs2-core" % "3.8.9" % "test"
 )
 
