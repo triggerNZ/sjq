@@ -13,9 +13,15 @@ object InterpreterSpec extends Specification {
       Literals                    $literals
       Array index                 $arrayIndex
       Slice                       $slice
+      Dictionaries                $dicts
+      Arrays                     $arrays
     """
 
-  def identityS = ".".on(jString("Hello, World")) === jString("Hello, World")
+  def identityS = Seq(
+    ".".on(jString("Hello, World")) === jString("Hello, World"),
+    ".".on(jString(0xFEFF.toChar + "Hello, World")) === jString(0xFEFF.toChar + "Hello, World")
+
+  )
 
   def objectIdentifierIndex = Seq(
     ".foo".on(Json("foo" := 42, "bar" := "less interesting data")) === jNumber(42),
@@ -40,8 +46,20 @@ object InterpreterSpec extends Specification {
 
 
   def literals = Seq(
-    "\"hello world\"".ignoreInput === jString("hello world")
+    "\"hello world\"".ignoreInput === jString("hello world"),
+    "true".ignoreInput === jTrue,
+    "false".ignoreInput === jFalse,
+    "null".ignoreInput === jNull
   )
+
+  def dicts = Seq(
+    "{}".ignoreInput === Json()
+  )
+
+  def arrays = Seq(
+    "[]".ignoreInput === Json.array()
+  )
+
 
   def arrayIndex = Seq(
     ".[0]".on(Json.array(Json("name" := "JSON", "good" := true), Json("name" := "XML", "good" := false))) === Json("name" := "JSON", "good" := true),

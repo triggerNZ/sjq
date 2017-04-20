@@ -31,6 +31,10 @@ object Interpreter {
       case IndexTerm(term, index) => indexTerm(term, index)
       case SliceTerm(term, i1o, i2o) => sliceTerm(term, i1o, i2o)
       case NumberLiteralTerm(n) => constant(n.toJsNumber)
+      case BooleanLiteralTerm(b) => constant(jBool(b.value))
+      case NullLiteralTerm => constant(jNull)
+      case DictTerm(MkDict(List())) => constant(Json())  //TODO extend with actual dicts
+      case ArrayTerm() => constant(Json.array())         //TODO handle data in arrays
       case t => sys.error(s"Don't know how to handle term $t")
     }
   }

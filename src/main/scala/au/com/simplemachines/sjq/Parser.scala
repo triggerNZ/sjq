@@ -88,10 +88,9 @@ object Parser {
     val ident: P[Token] = P((CharIn('a' to 'z', 'A' to 'Z', "_") ~ CharIn('a' to 'z', 'A' to 'Z', '0' to '9', "_").rep).!).map(Identifier)
     val field: P[Field] = P("." ~ (CharIn('a' to 'z', 'A' to 'Z', "_") ~ CharIn('a' to 'z', 'A' to 'Z', '0' to '9', "_").rep).!).map(Field)
 
-    //TODO CHECK if these are still supposed to be parsed. I suspect not
-//    val true_ = P("true")
-//    val false_ = P("false")
-//    val null_ = P("null")
+    val true_ = P("true").map(_ => BooleanLiteral(true))
+    val false_ = P("false").map(_ => BooleanLiteral(false))
+    val null_ = P("null")
   }
 
 
@@ -100,8 +99,15 @@ object Parser {
 
   val indexTerm: P[Term] = stringLiteralTerm | numberLiteralTerm
 
+  //TODO handle than just empty dicts
+  def mkDict: P[MkDict] = P("").map(_ => MkDict(List()))
+
   def term: P[Term] =
     stringLiteralTerm |
+      (Tok.true_ | Tok.false_).map(BooleanLiteralTerm) |
+      Tok.null_.map(_ => NullLiteralTerm) |
+      ("{" ~ mkDict ~ "}").map(DictTerm) |
+      ("[" ~ "]").map(_ => ArrayTerm())  |
       (Tok.field ~ "?".!.?).rep(1).map(fs  => FieldTerm(fs.toList.map {case (f, o) => (f, o.isDefined)})) |
     Tok.rec          .map(_   => RecTerm) |
 //    P(".") ~ sliceExpr.? .map { ie => wrapSliceTerm(IdentityTerm, ie)} |

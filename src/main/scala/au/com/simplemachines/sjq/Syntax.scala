@@ -12,6 +12,7 @@ object Tokens {
     def toJsNumber: Json = value.fold(jNumber(_), jNumber(_))
   }
   case class StringLiteral(value: String) extends Token
+  case class BooleanLiteral(value: Boolean) extends Token
   case class Identifier(name: String) extends Token
   case class Field(name: String) extends Token
 }
@@ -48,9 +49,16 @@ object Syntax {
   case class FieldTerm(fields: List[(Tokens.Field, Boolean)]) extends Term
   case class StringLiteralTerm(value: String) extends Term
   case class NumberLiteralTerm(value: Tokens.NumLiteral) extends Term
+  case class BooleanLiteralTerm(value: Tokens.BooleanLiteral) extends Term
+  case object NullLiteralTerm extends Term
   case class IndexTerm(term: Term, idxExpr: Exp) extends Term
   case class SliceTerm(term: Term, fromIdx: Option[Exp], toIdx: Option[Exp]) extends Term
+  case class DictTerm(dict: MkDict) extends Term
+  case class ArrayTerm() extends Term  //TODO add data
 
+  case class MkDict(pairs: List[MkDictPair])
+
+  case class MkDictPair()
 
 
   sealed trait Import
