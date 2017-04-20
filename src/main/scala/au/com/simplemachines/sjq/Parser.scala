@@ -104,7 +104,7 @@ object Parser {
     stringLiteralTerm.log("LIT") |
       (Tok.field ~ "?".!.?).rep(1).map(fs  => FieldTerm(fs.toList.map {case (f, o) => (f, o.isDefined)})).log("FIELD") |
     Tok.rec          .map(_   => RecTerm) |
-    P(".") ~ sliceExpr.? .map { ie => wrapSliceTerm(IdentityTerm, ie)}.log("SLICE TERM") |
+//    P(".") ~ sliceExpr.? .map { ie => wrapSliceTerm(IdentityTerm, ie)}.log("SLICE TERM") |
     P(".") ~ indexExpr.? .map { ie => wrapIndexTerm(IdentityTerm, ie)}.log("INDEX TERM") |
     numberLiteralTerm.log("NUMBER LITERAL")
 
